@@ -1,0 +1,71 @@
+{{template "admin/AdminBase/base.html" .}}
+
+{{define "body" }}
+<div id="wrapper">
+{{template "admin/AdminBase/sidebar.html" .}}
+        <div class="su-toolbar">
+            <div class="tool-block su-tool-bold" title="加粗(Ctrl+B)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-bold"><b>B</b></span>
+            </div>
+            <div class="tool-block su-tool-italic" title="斜体(Ctrl+I)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-italic"><i>I</i></span>
+            </div>
+            <div class="tool-block su-tool-head" title="标题(Ctrl+H)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-header">title</span>
+            </div>
+            <div class="tool-block su-tool-link" title="链接(Ctrl+L)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-link"></span>
+            </div>
+            <div class="tool-block su-tool-img" title="图片(Ctrl+G)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-picture"></span>
+            </div>
+            <div class="tool-block su-tool-list" title="无序列表(Ctrl+U)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-list"></span>
+            </div>
+            <div class="tool-block su-tool-orderlist" title="有序列表(Ctrl+O)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-th-list"></span>
+            </div>
+            <div class="tool-block su-tool-code" title="单行代码(Ctrl+K)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-asterisk"></span>
+            </div>
+            <div class="tool-block su-tool-block" title="区块(Ctrl+Q)" data-placement="top" data-toggle="tooltip">
+                <span class="glyphicon glyphicon-comment"></span>
+            </div>
+
+            <button class="btn btn-sm btn-primary pull-right su-tool-preview">
+                <span class="glyphicon glyphicon-search"></span>
+                Preview
+            </button>
+        </div>
+
+
+
+
+
+
+
+    <div class="suEditor">
+
+        <textarea ></textarea>
+
+    </div>
+
+
+    <div class="suPreview">
+
+    </div>
+
+</div>
+<script type="text/javascript" src="../static/js/bootstrap-markdown.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var option={
+            target:'.suMarkdown',
+            preview:true,
+        };
+        SuMarkdown(option);
+    });
+
+</script>
+{{end}}
+

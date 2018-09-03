@@ -7,7 +7,7 @@ import (
 )
 
 func init()  {
-	orm.RegisterModel(new(User))
+	orm.RegisterModel(new(User),new(Permissions),new(Roles),new(PermissionRole))
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", "root:@tcp(127.0.0.1:3306)/blog?charset=utf8&loc=Asia%2FShanghai")
 	o :=orm.NewOrm()

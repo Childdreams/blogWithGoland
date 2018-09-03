@@ -1,0 +1,87 @@
+{{template "admin/AdminBase/base.html" .}}
+{{define "body" }}
+<div id="wrapper">
+
+    <!-- Sidebar -->
+{{template "admin/AdminBase/sidebar.html" .}}
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="index.html">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">AddPermissions</li>
+            </ol>
+
+            <div class="container">
+            <div class="card card-login mx-auto mt-5">
+                <div class="card-header">Add Permissions</div>
+                <div class="card-body">
+                    <form action="" method="post" >
+                        {{.xsrfdata}}
+                        {{if .flash.error}}
+                            <div class="form-group">
+                                <div class="form-label-group bg-danger form-control" style="opacity:0.5;color: #1C1C1C">
+                                {{.flash.error}}
+                                </div>
+                            </div>
+                        {{else if .flash.notice}}
+                            <div class="form-group">
+                                <div class="form-label-group bg-danger form-control" style="opacity:0.5;color: #84b805">
+                                {{.flash.notice}}
+                                </div>
+                            </div>
+                        {{end}}
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <select name="parent_id" id="" class="form-control">
+                                    <option value="0">TOP</option>
+                                    {{range $num,$permission := .tree}}
+                                            <option value="{{$permission.Id}}"> {{  hi $permission.Count `&nbsp;&nbsp;` | str2html}} -| {{$permission.Display_name}}</option>
+                                    {{end}}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="inputName" class="form-control" name="name" placeholder="Router" required="required" autofocus="autofocus">
+                                <label for="inputName">Router</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="display_name" name="display_name" class="form-control" placeholder="display_name" required="required">
+                                <label for="display_name">display_name</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="description" name="description" class="form-control" placeholder="description" required="required">
+                                <label for="description">description</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <select name="is_menu" id="" class="form-control">
+                                    <option value="0">Not Menu</option>
+                                    <option value="1">Is Menu</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary btn-block" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+{{end}}

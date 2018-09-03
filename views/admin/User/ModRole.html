@@ -1,0 +1,104 @@
+{{template "admin/AdminBase/base.html" .}}
+{{define "body" }}
+<div id="wrapper">
+
+    <!-- Sidebar -->
+{{template "admin/AdminBase/sidebar.html" .}}
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="index.html">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">AddRoles</li>
+            </ol>
+
+            <div class="container">
+            <div class="card  mx-auto mt-5">
+                <div class="card-header">Add Roles</div>
+                <div class="card-body">
+                    <form action="" method="post" >
+                        {{.xsrfdata}}
+                        {{if .flash.error}}
+                            <div class="form-group">
+                                <div class="form-label-group bg-danger form-control" style="opacity:0.5;color: #1C1C1C">
+                                {{.flash.error}}
+                                </div>
+                            </div>
+                        {{else if .flash.notice}}
+                            <div class="form-group">
+                                <div class="form-label-group bg-danger form-control" style="opacity:0.5;color: #84b805">
+                                {{.flash.notice}}
+                                </div>
+                            </div>
+                        {{end}}
+                            <input type="hidden" name="id" value="{{.roles.Id}}">
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="inputName" class="form-control" name="name" placeholder="Router" required="required" autofocus="autofocus" value="{{.roles.Name}}">
+                                <label for="inputName">Name</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="display_name" name="display_name" class="form-control" placeholder="display_name" required="required" value="{{.roles.Display_name}}">
+                                <label for="display_name">display_name</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <input type="text" id="description" name="description" class="form-control" placeholder="description" required="required" value="{{.roles.Description}}">
+                                <label for="description">description</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <div class="checkbox">
+                                    {{range $index,$side := .tree }}
+                                        {{if eq $side.Count 0}}
+                                            <label>
+                                                <input type="checkbox" class="checkboxMain" value="00000">&nbsp;&nbsp;<b>{{$side.Display_name}}</b> <br>
+                                                {{range $index2,$side2 := $.tree}}
+                                                    {{if eq $side2.Parent_id $side.Id}}
+                                                        <input type="checkbox" name="permissionID" class="checkboxFork" {{if (In_array $.preRoles $side2.Id )}}checked{{end}} value="{{$side2.Id}}">&nbsp;&nbsp;{{$side2.Display_name}}
+                                                    {{end}}
+                                                {{end}}
+                                            </label><br>
+                                        {{end}}
+                                    {{end}}
+                                </div>
+                            </div>
+                        </div>
+                        <input type="submit" class="btn btn-primary btn-block" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+<script src="/static/js/checkJS.js"></script>
+<script>
+    $(function () {
+        var flag = true
+        $(".checkboxMain").parent().each(function (i ,values ) {
+
+            $(values).children(".checkboxFork").each(function (i , v) {
+                if (!$(v).is(":checked")){
+                    flag = false
+                }
+            })
+            if(flag){
+                $(values).children(".checkboxMain").prop("checked",flag)
+            }
+        })
+    })
+</script>
+{{end}}

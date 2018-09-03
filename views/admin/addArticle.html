@@ -1,71 +1,60 @@
 {{template "admin/AdminBase/base.html" .}}
-
+<link rel="stylesheet" href="/static/css/font-awesome.css">
+<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/froala_editor.css">
+<link rel="stylesheet" href="/static/css/froala_page.css">
+<link rel="stylesheet" href="/static/css/themes/dark.css">
+<link rel="stylesheet" href="/static/css/themes/gray.css">
+<link rel="stylesheet" href="/static/css/themes/red.css">
+<link rel="stylesheet" href="/static/css/themes/royal.css">
 {{define "body" }}
 <div id="wrapper">
 {{template "admin/AdminBase/sidebar.html" .}}
-        <div class="su-toolbar">
-            <div class="tool-block su-tool-bold" title="加粗(Ctrl+B)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-bold"><b>B</b></span>
-            </div>
-            <div class="tool-block su-tool-italic" title="斜体(Ctrl+I)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-italic"><i>I</i></span>
-            </div>
-            <div class="tool-block su-tool-head" title="标题(Ctrl+H)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-header">title</span>
-            </div>
-            <div class="tool-block su-tool-link" title="链接(Ctrl+L)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-link"></span>
-            </div>
-            <div class="tool-block su-tool-img" title="图片(Ctrl+G)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-picture"></span>
-            </div>
-            <div class="tool-block su-tool-list" title="无序列表(Ctrl+U)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-list"></span>
-            </div>
-            <div class="tool-block su-tool-orderlist" title="有序列表(Ctrl+O)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-th-list"></span>
-            </div>
-            <div class="tool-block su-tool-code" title="单行代码(Ctrl+K)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-asterisk"></span>
-            </div>
-            <div class="tool-block su-tool-block" title="区块(Ctrl+Q)" data-placement="top" data-toggle="tooltip">
-                <span class="glyphicon glyphicon-comment"></span>
-            </div>
+       <div id="edit">
 
-            <button class="btn btn-sm btn-primary pull-right su-tool-preview">
-                <span class="glyphicon glyphicon-search"></span>
-                Preview
-            </button>
-        </div>
-
-
-
-
-
-
-
-    <div class="suEditor">
-
-        <textarea ></textarea>
-
-    </div>
-
-
-    <div class="suPreview">
-
-    </div>
-
+       </div>
 </div>
-<script type="text/javascript" src="../static/js/bootstrap-markdown.js"></script>
+<script src="/static/js/editor/libs/jquery-1.11.1.min.js"></script>
+<script src="/static/js/editor/froala_editor.min.js"></script>
+<!--[if lt IE 9]>
+    <script src="../js/froala_editor_ie8.min.js"></script>
+<![endif]-->
+<script src="/static/js/editor/plugins/tables.min.js"></script>
+<script src="/static/js/editor/plugins/lists.min.js"></script>
+<script src="/static/js/editor/plugins/colors.min.js"></script>
+<script src="/static/js/editor/plugins/media_manager.min.js"></script>
+<script src="/static/js/editor/plugins/font_family.min.js"></script>
+<script src="/static/js/editor/plugins/font_size.min.js"></script>
+<script src="/static/js/editor/plugins/block_styles.min.js"></script>
+<script src="/static/js/editor/plugins/video.min.js"></script>
+<script src="/static/js/editor/langs/zh_cn.js"></script>
 <script type="text/javascript">
-    $(function(){
-        var option={
-            target:'.suMarkdown',
-            preview:true,
-        };
-        SuMarkdown(option);
+    $(function () {
+        $('#edit').editable({
+            inlineMode: false,
+            alwaysBlank: true,
+            charCounterCount:true,
+            language: "zh_cn",
+            direction: "ltr",
+            allowedImageTypes: ["jpeg", "jpg", "png", "gif"],
+            colorsText: ['#61BD6D', '#1ABC9C', '#54ACD2', 'REMOVE'],
+            dragInline:true,
+            autosave: true,
+            autosaveInterval: 2500,
+            height:"500px",
+            width:"1600px",
+            saveURL: 'upload/Article',
+            saveParams: { ArticleID: "123" },
+            saveInterval: 2500,
+            spellcheck: true,
+            plainPaste: true,
+            imageButtons: ["floatImageLeft", "floatImageNone", "floatImageRight", "linkImage", "replaceImage", "removeImage"],
+            imageUploadURL: 'upload/Img',
+            imageUploadParams: { _xsrf: {{.xsrf_token}} },
+            imageParams: { postId: "123" },
+            enableScript: false
+        })
     });
-
 </script>
 {{end}}
 

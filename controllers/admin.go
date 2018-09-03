@@ -11,6 +11,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"myproject/utils"
+	"os"
 )
 
 type AdminController struct {
@@ -23,6 +24,7 @@ func (c *AdminController) URLMapping() {
 	c.Mapping("blank", c.Blank)
 	c.Mapping("charts", c.Charts)
 	c.Mapping("tables", c.Tables)
+	c.Mapping("article", c.Article)
 }
 
 
@@ -136,10 +138,40 @@ func (c *AdminController) Error404()  {
 
 
 func (c *AdminController) AddArticle()  {
-	c.TplName = "admin/addArticle.html"
+	if c.Ctx.Request.Method == "GET"{
+		//o := orm.NewOrm()
+
+		c.TplName = "admin/addArticle.html"
+
+	}
+}
+
+type ImgInfo struct {
+	Link string		`json:"link"`
 }
 
 
+
+func (c *AdminController) UploadImg() {
+	file , h , err :=  c.GetFile("file")
+	if err != nil{
+		imginfo := ImgInfo{"error"}
+		c.Data["json"] = &imginfo
+		c.ServeJSON()
+	}
+	dirName := time.Now().Format("2006-01-02")
+	pathName := "static/images/" +  dirName
+	_, err = os.Stat(pathName)
+	if os.IsNotExist(err) {
+		os.Mkdir(pathName,os.ModePerm)
+	}
+	path := fmt.Sprintf("%s/%s",pathName , h.Filename)
+	file.Close()
+	c.SaveToFile("file",path)
+	imginfo := ImgInfo{fmt.Sprintf("%s/%s",c.Ctx.Request.Header["Origin"][0],path)}
+	c.Data["json"] = &imginfo
+	c.ServeJSON()
+}
 
 // @router /blank [get]
 func (c *AdminController) Blank()  {
@@ -155,6 +187,11 @@ func (c *AdminController) Charts()  {
 // @router /tables [get]
 func (c *AdminController) Tables()  {
 	c.TplName = "admin/tables.html"
+}
+
+// @router /article [get]
+func (c *AdminController) Article()  {
+	c.TplName = "admin/article.html"
 }
 
 

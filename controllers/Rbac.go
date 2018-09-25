@@ -20,7 +20,7 @@ type RbacController struct {
 func (c *RbacController) AddPermissions()  {
 	if c.Ctx.Request.Method == "GET"{
 		o := orm.NewOrm()
-		qs := o.QueryTable("permissions")
+		qs := o.QueryTable("permissions").OrderBy("-serialnum")
 		var permissions []*models.Permissions
 		_,err := qs.All(&permissions)
 		if err != nil{
@@ -38,6 +38,7 @@ func (c *RbacController) AddPermissions()  {
 		description := c.GetString("description")
 		is_menu :=c.GetString("is_menu")
 		Parent_id := c.GetString("parent_id")
+		Serialnum := c.GetString("serialnum")
 		permission :=  new(models.Permissions)
 		fmt.Println(display_name,description,Name)
 		if Name == "" || display_name == "" {
@@ -47,6 +48,8 @@ func (c *RbacController) AddPermissions()  {
 		permission.Name = Name
 		permission.Display_name = display_name
 		permission.Description = description
+		Serialnum_int ,_ := strconv.Atoi(Serialnum)
+		permission.Serialnum = Serialnum_int
 		is_menu_int ,_ := strconv.Atoi(is_menu)
 		permission.Is_menu = is_menu_int
 		parent_id_int ,_ :=strconv.Atoi(Parent_id)
@@ -133,6 +136,8 @@ func (c *RbacController) ModPermission () {
 		description := c.GetString("description")
 		Parent_id := c.GetString("parent_id")
 		is_menu :=c.GetString("is_menu")
+		serialnum :=c.GetString("serialnum")
+		serialnum_int ,_ :=strconv.Atoi(serialnum)
 		parent_id_int ,_ :=strconv.Atoi(Parent_id)
 		fmt.Println(Name,Id,display_name,description,Parent_id,is_menu,parent_id_int)
 		if Name == "" || display_name == "" || Id == ""{
@@ -141,7 +146,7 @@ func (c *RbacController) ModPermission () {
 		}
 		num,_ := o.QueryTable("permissions").Filter("id",Id).Update(
 			orm.Params{
-				"name":Name,"display_name":display_name,"description":description,"is_menu":is_menu,"parent_id":parent_id_int,"updated_at":time.Now(),
+				"name":Name,"display_name":display_name,"description":description,"is_menu":is_menu,"parent_id":parent_id_int,"updated_at":time.Now(),"serialnum":serialnum_int,
 			})
 		if num < 1 {
 			flask.Error("Nothing modified")
@@ -313,16 +318,141 @@ func (c *RbacController)DelRole()  {
 
 // User Info
 func (c *RbacController)UserList()  {
-
+	DB ,_ := orm.NewQueryBuilder("mysql")
+	DB.Select("users.id","users.name","users.email","users.remember_token","users.created_at","users.updated_at","GROUP_CONCAT(roles.display_name) as dname").
+		From("users").
+		LeftJoin("role_user").
+		On("role_user.user_id = users.id").
+		LeftJoin("roles").
+		On("roles.id = role_user.role_id").
+		GroupBy("users.id")
+	var userdata []*utils.UserSQL
+	orm.NewOrm().Raw(DB.String()).QueryRows(&userdata)
+	c.Data["tree"] = userdata
+	c.TplName = "admin/User/UserList.html"
 }
 
 func (c *RbacController)AddUser()  {
-	c.Ctx.WriteString("ceshi")
-	c.StopRun()
+	if c.Ctx.Request.Method == "GET"{
+		var rolesInfo []*models.Roles
+		orm.NewOrm().QueryTable("roles").All(&rolesInfo)
+		c.Data["tree"] = rolesInfo
+		c.TplName = "admin/User/AddUser.html"
+	}else {
+		flash := beego.NewFlash()
+		RequestData := c.Input()
+		Name := RequestData["name"][0]
+		Email := RequestData["email"][0]
+		Password := RequestData["password"][0]
+		ConfirmPassword := RequestData["confirmPassword"][0]
+		RolesID := RequestData["rolesID"]
+		var userinfo models.Users
+		userinfo.Name = Name
+		userinfo.Email = Email
+		userinfo.CreatedAt = time.Now()
+		userinfo.UpdatedAt = time.Now()
+		fmt.Println(Password,ConfirmPassword)
+		if Password == ConfirmPassword{
+			flash.Error("Password inconsistency")
+			flash.Store(&c.Controller)
+			c.Redirect("AddUser",302)
+		}
+		userinfo.Password = utils.EnMd5(Password)
+		id , _ := orm.NewOrm().Insert(&userinfo)
+		fmt.Println(userinfo)
+		if id < 1 {
+			flash.Error("Created Fail")
+			flash.Store(&c.Controller)
+			c.Redirect("AddUser",302)
+		}
+
+		var UserRoles []models.RoleUser
+		for _,m := range RolesID{
+			m_int ,_ :=strconv.Atoi(m)
+			insertype := models.RoleUser{RoleId:m_int,UserId:int(id)}
+			UserRoles = append(UserRoles,insertype)
+		}
+		successNums, _ := orm.NewOrm().InsertMulti(100,UserRoles)
+		if successNums < 1{
+			flash.Notice("add new Roles Successfull")
+		}
+		flash.Store(&c.Controller)
+		c.Redirect("AddUser",302)
+	}
 }
 func (c *RbacController)ModUser()  {
+	if c.Ctx.Request.Method == "POST"{
+		flash := beego.NewFlash()
+		RequestData := c.Input()
+		Id := RequestData["id"][0]
+		Name := RequestData["name"][0]
+		Email := RequestData["email"][0]
+		Password := RequestData["password"][0]
+		ConfirmPassword := RequestData["confirmPassword"][0]
+		RolesID := RequestData["rolesID"]
+		fmt.Println(Password,ConfirmPassword)
+		if Password != "" && Password == ConfirmPassword{
+			flash.Error("Password inconsistency")
+			flash.Store(&c.Controller)
+			c.Redirect("userList",302)
+		}
+		params := orm.Params{"name":Name,"email":Email,"updated_at":time.Now()}
+		if Password != ""{
+			params = orm.Params{"name":Name,"password":utils.EnMd5(Password),"email":Email,"updated_at":time.Now()}
+		}
+		o := orm.NewOrm()
+		o.QueryTable("users").Filter("id",Id).Update(params)
+		o.QueryTable("role_user").Filter("user_id",Id).Delete()
+
+		var UserRoles []models.RoleUser
+		id , _:= strconv.ParseInt(Id,10,64)
+		for _,m := range RolesID{
+			m_int ,_ :=strconv.Atoi(m)
+			insertype := models.RoleUser{RoleId:m_int,UserId:int(id)}
+			UserRoles = append(UserRoles,insertype)
+		}
+		successNums, _ := orm.NewOrm().InsertMulti(100,UserRoles)
+		if successNums < 1{
+			flash.Notice("add new Roles Successfull")
+		}
+		flash.Store(&c.Controller)
+		c.Redirect("userList",302)
+	}else {
+		Id := c.GetString("id" , "0")
+		flash := beego.NewFlash()
+		if Id == "0" {
+			flash.Error("Server Error!")
+			flash.Store(&c.Controller)
+			c.Redirect("userList", 302)
+		}
+		var user models.Users
+		orm.NewOrm().QueryTable("users").Filter("id",Id).One(&user)
+		var roles []models.RoleUser
+		orm.NewOrm().QueryTable("role_user").Filter("user_id",Id).All(&roles)
+		var roleInt []int
+		for _,v := range roles{
+			roleInt = append(roleInt, v.RoleId)
+		}
+		var rolesInfo []*models.Roles
+		orm.NewOrm().QueryTable("roles").All(&rolesInfo)
+		c.Data["tree"] = rolesInfo
+		c.Data["userInfo"] = user
+		c.Data["roleInfo"] = roleInt
+		c.TplName = "admin/User/ModUser.html"
+	}
 
 }
 func (c *RbacController)DelUser()  {
-
+	Id := c.GetString("id" , "0")
+	flash := beego.NewFlash()
+	if Id == "0" {
+		flash.Error("Server Error!")
+		flash.Store(&c.Controller)
+		c.Redirect("userList", 302)
+	}
+	orm.NewOrm().QueryTable("users").Filter("id",Id).Delete()
+	orm.NewOrm().QueryTable("role_user").Filter("user_id",Id).Delete()
+	flash.Notice("SUCCESS")
+	flash.Store(&c.Controller)
+	c.Redirect("userList",302)
 }

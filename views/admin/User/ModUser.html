@@ -35,40 +35,44 @@
                                 </div>
                             </div>
                         {{end}}
-                            <input type="hidden" name="id" value="{{.roles.Id}}">
-                        <div class="form-group">
-                            <div class="form-label-group">
-                                <input type="text" id="inputName" class="form-control" name="name" placeholder="Router" required="required" autofocus="autofocus" value="{{.roles.Name}}">
-                                <label for="inputName">Name</label>
+                            <input type="hidden" name="id" value="{{.userInfo.Id}}">
+                            <div class="form-group">
+                                <div class="form-label-group">
+                                    <input type="text" id="inputName" class="form-control" name="name" placeholder="Name" required="required" autofocus="autofocus" value="{{.userInfo.Name}}">
+                                    <label for="inputName">Name</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-label-group">
-                                <input type="text" id="display_name" name="display_name" class="form-control" placeholder="display_name" required="required" value="{{.roles.Display_name}}">
-                                <label for="display_name">display_name</label>
+                            <div class="form-group">
+                                <div class="form-label-group">
+                                    <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email address" required="required" autofocus="autofocus" value="{{.userInfo.Email}}">
+                                    <label for="inputEmail">Email address</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-label-group">
-                                <input type="text" id="description" name="description" class="form-control" placeholder="description" required="required" value="{{.roles.Description}}">
-                                <label for="description">description</label>
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-label-group">
+                                            <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password"  value="">
+                                            <label for="inputPassword">Password</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-label-group">
+                                            <input type="password" id="confirmPassword" class="form-control" name="confirmPassword" placeholder="Confirm password" value="">
+                                            <label for="confirmPassword">Confirm password</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
                         <div class="form-group">
                             <div class="form-label-group">
                                 <div class="checkbox">
-                                    {{range $index,$side := .tree }}
-                                        {{if eq $side.Count 0}}
-                                            <label>
-                                                <input type="checkbox" class="checkboxMain" value="00000">&nbsp;&nbsp;<b>{{$side.Display_name}}</b> <br>
-                                                {{range $index2,$side2 := $.tree}}
-                                                    {{if eq $side2.Parent_id $side.Id}}
-                                                        <input type="checkbox" name="permissionID" class="checkboxFork" {{if (In_array $.preRoles $side2.Id )}}checked{{end}} value="{{$side2.Id}}">&nbsp;&nbsp;{{$side2.Display_name}}
-                                                    {{end}}
-                                                {{end}}
-                                            </label><br>
-                                        {{end}}
-                                    {{end}}
+                                {{range $index,$side := .tree }}
+                                    <label>
+                                        <input type="checkbox" name="rolesID" class="checkboxFork" {{if (In_array $.roleInfo $side.Id )}}checked{{end}} value="{{$side.Id}}">&nbsp;&nbsp;{{$side.Display_name}}
+                                    </label>&nbsp;
+                                {{end}}
+
                                 </div>
                             </div>
                         </div>

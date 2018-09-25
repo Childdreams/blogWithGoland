@@ -45,6 +45,7 @@
                                 <th>Description</th>
                                 <th>Parent_id</th>
                                 <th>Is_menu</th>
+                                <th>SerialNum</th>
                                 <th>Operation</th>
                             </tr>
                             </thead>
@@ -56,6 +57,7 @@
                                 <th>Description</th>
                                 <th>Parent_id</th>
                                 <th>Is_menu</th>
+                                <th>SerialNum</th>
                                 <th>Operation</th>
                             </tr>
                             </tfoot>
@@ -68,6 +70,7 @@
                                 <td>{{$permission.Description}}</td>
                                 <td>{{$permission.Parent_id}}</td>
                                 <td>{{$permission.Is_menu}}</td>
+                                <td>{{$permission.Serialnum}}</td>
                                 <td>
                                     <a href="/admin/rbac/delPsermission?id={{$permission.Id}}" class="btn btn-danger ">DELETE</a>
                                     &nbsp;<a href="/admin/rbac/ModPermission?id={{$permission.Id}}" class="btn btn-primary ">MODIFY</a>

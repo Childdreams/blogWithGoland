@@ -20,12 +20,16 @@ func init() {
 		beego.NSRouter("/register", &controllers.AdminController{},"get,post:Register"),
 		beego.NSRouter("/login", &controllers.AdminController{},"get,post:Login"),
 		beego.NSRouter("/logout", &controllers.AdminController{},"get,post:Logout"),
-		beego.NSRouter("/AddArticle", &controllers.AdminController{},"get,post:AddArticle"),
 		beego.NSRouter("/upload/Img", &controllers.AdminController{},"post:UploadImg"),
+		beego.NSRouter("/upload/Article", &controllers.ArticleController{},"post:UploadArticle"),
 
 		beego.NSInclude(
 			&controllers.AdminController{},
 		),
+	)
+	Article := beego.NewNamespace("/admin/article",
+		beego.NSRouter("/AddArticle", &controllers.ArticleController{},"get,post:AddArticle"),
+
 	)
 	Rbac := beego.NewNamespace("/admin/rbac",
 		//Permissions
@@ -44,6 +48,13 @@ func init() {
 		beego.NSRouter("/ModUser",&controllers.RbacController{},"get,post:ModUser"),
 		beego.NSRouter("/DelUser",&controllers.RbacController{},"get:DelUser"),
 		)
+	BlogType := beego.NewNamespace("/admin/blogtype" ,
+		beego.NSRouter("/List",&controllers.BlogTypeController{}, "get:List"),
+		beego.NSRouter("/Add",&controllers.BlogTypeController{}, "get,post:Add"),
+		beego.NSRouter("/Mod/:id([0-9]+",&controllers.BlogTypeController{}, "get,post:Mod"),
+		beego.NSRouter("/Del/:id([0-9]+",&controllers.BlogTypeController{}, "get:Del"),
+	)
 	beego.AddNamespace(Admins)
 	beego.AddNamespace(Rbac)
+	beego.AddNamespace(BlogType,Article)
 }

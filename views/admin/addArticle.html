@@ -10,9 +10,79 @@
 {{define "body" }}
 <div id="wrapper">
 {{template "admin/AdminBase/sidebar.html" .}}
-       <div id="edit">
+    <div id="content-wrapper">
 
-       </div>
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+
+
+            <div class="test">
+                <div class="card">
+                    <div class="card-header">Add User</div>
+                    <div class="card-body">
+                        <form action="" method="post" >
+                        {{.xsrfdata}}
+                        {{if .flash.error}}
+                            <div class="form-group">
+                                <div class="form-label-group bg-danger form-control" style="opacity:0.5;color: #1C1C1C">
+                                {{.flash.error}}
+                                </div>
+                            </div>
+                        {{else if .flash.notice}}
+                            <div class="form-group">
+                                <div class="form-label-group bg-danger form-control" style="opacity:0.5;color: #84b805">
+                                {{.flash.notice}}
+                                </div>
+                            </div>
+                        {{end}}
+                            <input type="hidden" name="ArticleID" value="{{.articleID}}">
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col-md-3">
+                                        <div class="form-label-group">
+                                            <input type="text" id="inputTitle" class="form-control" name="password" placeholder="Password" required="required">
+                                            <label for="inputTitle">Title</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-label-group">
+                                            <select name="type" id="" class="form-control" style="height: 50px">
+                                                {{ range $i ,$v := .select}}
+                                                <option value="{{$v.Id}}"
+                                                        selected
+                                                > {{$v.Blogname}}</option>
+                                            {{end}}
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-label-group" >
+                                            <input type="file" id="inputView" class="form-control" name="view" placeholder="Password" required="required">
+                                            <label for="inputView">view</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-label-group">
+                                    <div id="edit">
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <input type="submit" class="btn btn-primary btn-block" onclick="sub()" value="Submit">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <script src="/static/js/editor/libs/jquery-1.11.1.min.js"></script>
 <script src="/static/js/editor/froala_editor.min.js"></script>
@@ -42,10 +112,10 @@
             autosave: true,
             autosaveInterval: 2500,
             height:"500px",
-            width:"1600px",
+            width:"1625px",
             saveURL: 'upload/Article',
-            saveParams: { ArticleID: "123" },
-            saveInterval: 2500,
+            saveParams: { ArticleID: "{{.articleID}}" , _xsrf: {{.xsrf_token}} },
+            saveInterval: 500,
             spellcheck: true,
             plainPaste: true,
             imageButtons: ["floatImageLeft", "floatImageNone", "floatImageRight", "linkImage", "replaceImage", "removeImage"],
@@ -54,6 +124,14 @@
             imageParams: { postId: "123" },
             enableScript: false
         })
+        function sub() {
+            flag = confirm("你确定提交")
+            if (flag) {
+                return true
+            }else {
+                return false
+            }
+        }
     });
 </script>
 {{end}}

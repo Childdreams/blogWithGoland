@@ -3,6 +3,8 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	_ "myproject/models"
 	"html/template"
 	"github.com/astaxie/beego/orm"
 	"myproject/models"
@@ -21,12 +23,10 @@ func (c *BaseController)Prepare()  {
 func (c *BaseController)Render() error{
 	c.Data["xsrfdata"]=template.HTML(c.XSRFFormHTML())
 	c.Data["xsrf_token"] = c.XSRFToken()
-
-
 	o := orm.NewOrm()
 	cond := orm.NewCondition()
 	Render_permissions := cond.And("is_menu" , 1)
-	qs := o.QueryTable("permissions").SetCond(Render_permissions)
+	qs := o.QueryTable("permissions").SetCond(Render_permissions).OrderBy("-serialnum")
 	var permissions []*models.Permissions
 	_,err := qs.All(&permissions)
 
@@ -39,7 +39,9 @@ func (c *BaseController)Render() error{
 	if c.Ctx.ResponseWriter.Header().Get("Content-Type") == "" {
 		c.Ctx.Output.Header("Content-Type", "text/html; charset=utf-8")
 	}
+
 	rb, err := c.RenderBytes()
+
 	if err != nil{
 
 	}

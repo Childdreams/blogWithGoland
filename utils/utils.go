@@ -5,6 +5,8 @@ import (
 	"encoding/hex"
 	"myproject/models"
 	"github.com/astaxie/beego/orm"
+	"sort"
+	"fmt"
 )
 
 func EnMd5(EncryptedStr  string) string  {
@@ -49,4 +51,26 @@ func GetAllPerInfo() []PermissionsCount {
 	}
 	res = GetTree(res,permissionsTree,0,0)
 	return res
+}
+
+
+func ForAdd(num int ,in string)(out string){
+	str := ""
+	for i:= 1 ; i<=num;i++{
+		str += in
+	}
+	return str
+}
+
+func In_array(arrInt []int , target int)(bool){
+	sort.Ints(arrInt)
+	i := sort.Search(len(arrInt), func(i int) bool {
+		return arrInt[i] >= target
+	})
+	fmt.Println("this is test")
+	if i<len(arrInt) && arrInt[i] == target { //这里可以采用 strings.EqualFold(arrString[i],target)
+		return true
+	}else {
+		return  false
+	}
 }

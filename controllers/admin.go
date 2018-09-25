@@ -55,7 +55,7 @@ func (c *AdminController) Login()  {
 		Passwored := utils.EnMd5(c.GetString("password"))
 		o := orm.NewOrm()
 		qs := o.QueryTable("user")
-		var userRes []*models.User
+		var userRes []*models.Users
 		num,err := qs.Filter("email",Email).Filter("password",Passwored).All(&userRes)
 		flask := beego.NewFlash()
 		if err != nil || num < 1 {
@@ -104,15 +104,13 @@ func (c *AdminController) Register()  {
 			c.StopRun()
 		}
 		o := orm.NewOrm()
-		user := new(models.User)
-		user.Username = FirstName + LastName
+		user := new(models.Users)
+		user.Name = FirstName + LastName
 		h := md5.New()
 		h.Write([]byte(Password))
 		cipherStr := h.Sum(nil)
 		user.Password = hex.EncodeToString(cipherStr)
-		user.LastTime = time.Now()
 		user.Email = Email
-		user.LastIp = c.Ctx.Request.RemoteAddr
 		fmt.Println("User execute Insert ")
 		_ ,err := o.Insert(user)
 		c.SetSession("email",Email)
@@ -136,15 +134,6 @@ func (c *AdminController) Error404()  {
 	c.TplName = "admin/404.html"
 }
 
-
-func (c *AdminController) AddArticle()  {
-	if c.Ctx.Request.Method == "GET"{
-		//o := orm.NewOrm()
-
-		c.TplName = "admin/addArticle.html"
-
-	}
-}
 
 type ImgInfo struct {
 	Link string		`json:"link"`

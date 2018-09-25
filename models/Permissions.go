@@ -8,8 +8,10 @@ type Permissions struct {
 	Display_name string		`orm:"null"`
 	Description string		`orm:"null"`
 	Parent_id int			`orm:"default(0)"`
-	Is_menu int			`orm:"default(0)"`
+	Is_menu int				`orm:"default(0)"`
+	Serialnum int			`orm:"default(0)"`
 	Created_at time.Time	`orm:"default(time)"`
 	Updated_at time.Time	`orm:"default(time)"`
 
 }
+

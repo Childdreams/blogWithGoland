@@ -41,9 +41,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Display Name</th>
-                                <th>Description</th>
-                                <th>PermissionList</th>
+                                <th>Email</th>
+                                <th>Remomber Token</th>
+                                <th>RolesLists</th>
                                 <th>Operation</th>
                             </tr>
                             </thead>
@@ -51,23 +51,23 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Router</th>
-                                <th>Display Name</th>
-                                <th>Description</th>
-                                <th>PermissionList</th>
+                                <th>Email</th>
+                                <th>Remomber Token</th>
+                                <th>RolesLists</th>
                                 <th>Operation</th>
                             </tr>
                             </tfoot>
                             <tbody>
-                            {{range $num , $role := .roles}}
+                            {{range $num , $role := .tree}}
                             <tr>
                                 <td>{{$role.Id}}</td>
                                 <td>{{$role.Name}}</td>
-                                <td>{{$role.Display_name}}</td>
-                                <td>{{$role.Description}}</td>
+                                <td>{{$role.Email}}</td>
+                                <td>{{$role.RememberToken}}</td>
                                 <td>{{$role.Dname}}</td>
                                 <td>
-                                    <a href="/admin/rbac/delrole?id={{$role.Id}}" class="btn btn-danger ">DELETE</a>
-                                    &nbsp;<a href="/admin/rbac/molrole?id={{$role.Id}}" class="btn btn-primary ">MODIFY</a>
+                                    <a href="/admin/rbac/DelUser?id={{$role.Id}}" class="btn btn-danger ">DELETE</a>
+                                    &nbsp;<a href="/admin/rbac/ModUser?id={{$role.Id}}" class="btn btn-primary ">MODIFY</a>
                                 </td>
                             </tr>
                             {{end}}

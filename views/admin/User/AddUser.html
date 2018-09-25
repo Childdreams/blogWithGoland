@@ -13,12 +13,12 @@
                 <li class="breadcrumb-item">
                     <a href="index.html">Dashboard</a>
                 </li>
-                <li class="breadcrumb-item active">AddRoles</li>
+                <li class="breadcrumb-item active">AddUser</li>
             </ol>
 
             <div class="container">
             <div class="card  mx-auto mt-5">
-                <div class="card-header">Add Roles</div>
+                <div class="card-header">Add User</div>
                 <div class="card-body">
                     <form action="" method="post" >
                         {{.xsrfdata}}
@@ -38,37 +38,39 @@
 
                         <div class="form-group">
                             <div class="form-label-group">
-                                <input type="text" id="inputName" class="form-control" name="name" placeholder="Router" required="required" autofocus="autofocus">
+                                <input type="text" id="inputName" class="form-control" name="name" placeholder="Name" required="required" autofocus="autofocus">
                                 <label for="inputName">Name</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-label-group">
-                                <input type="text" id="display_name" name="display_name" class="form-control" placeholder="display_name" required="required">
-                                <label for="display_name">display_name</label>
+                                <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email address" required="required" autofocus="autofocus">
+                                <label for="inputEmail">Email address</label>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="form-label-group">
-                                <input type="text" id="description" name="description" class="form-control" placeholder="description" required="required">
-                                <label for="description">description</label>
+                            <div class="form-row">
+                                <div class="col-md-6">
+                                    <div class="form-label-group">
+                                        <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required="required">
+                                        <label for="inputPassword">Password</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-label-group">
+                                        <input type="password" id="confirmPassword" class="form-control" name="confirmPassword" placeholder="Confirm password" required="required">
+                                        <label for="confirmPassword">Confirm password</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-label-group">
                                 <div class="checkbox">
                                     {{range $index,$side := .tree }}
-                                        {{if eq $side.Count 0}}
                                     <label>
-                                        <input type="checkbox" class="checkboxMain">&nbsp;&nbsp;<b>{{$side.Display_name}}</b> <br>
-                                        {{range $index2,$side2 := $.tree}}
-                                            {{if eq $side2.Parent_id $side.Id}}
-                                        <input type="checkbox" name="permissionID" class="checkboxFork" value="{{$side2.Id}}">&nbsp;&nbsp;{{$side2.Display_name}}
-                                            {{end}}
-                                        {{end}}
-
-                                    </label><br>
-                                        {{end}}
+                                        <input type="checkbox" name="rolesID" class="checkboxFork" value="{{$side.Id}}">&nbsp;&nbsp;{{$side.Display_name}}
+                                    </label>&nbsp;
                                     {{end}}
                                 </div>
                             </div>
@@ -85,5 +87,4 @@
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
 </a>
-<script src="/static/js/checkJS.js"></script>
 {{end}}

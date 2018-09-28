@@ -1,6 +1,9 @@
 package utils
 
-import "time"
+import (
+	"time"
+	"myproject/models"
+)
 
 type RolesSQ struct {
 	Id int
@@ -20,4 +23,18 @@ type UserSQL struct {
 	Created_at time.Time
 	Updated_at time.Time
 	Dname string
+}
+
+type BlogContent struct {
+	models.Blog
+	Content string
+}
+
+type SessionUserInfo struct {
+	Router []PermissionsCount
+	UserInfo Userinfo
+}
+
+type Userinfo struct {
+	Email string
 }

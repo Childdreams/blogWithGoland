@@ -1,0 +1,62 @@
+{{template "admin/AdminBase/base.html" .}}
+{{define "body" }}
+<link rel="stylesheet" href="/static/css/articleFlex.css">
+
+<div id="wrapper">
+
+    <!-- Sidebar -->
+{{template "admin/AdminBase/sidebar.html" .}}
+
+    <div id="content-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">Tables</li>
+            </ol>
+
+            <!-- DataTables Example -->
+            <div class="wrapper-flex">
+                {{range $num , $artlist := .articleList}}
+                <div class="flex-test">
+                    <div class="Img">
+                        <img src="{{$artlist.Views}}" onerror="javascript:this.src='/static/images/3.jpg'" alt="{{$artlist.Title}}" class="cardimg" height="100%" >
+                    </div>
+                    <div class="title">{{$artlist.Title}}</div>
+                    <div class="other">
+                        <a href="/admin/article/ModArticle?id={{$artlist.Id}}">修改</a> &nbsp;&nbsp;&nbsp;
+                        <a href="/admin/article/DelArticle?id={{$artlist.Id}}">删除</a>
+                    </div>
+                </div>
+                {{end}}
+
+            </div>
+
+            <p class="small text-center text-muted my-5">
+                <em>More table examples coming soon...</em>
+            </p>
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+
+
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+
+
+
+
+
+<!-- Custom scripts for all pages-->
+<script src="/static/js/sb-admin.min.js"></script>
+<!-- Demo scripts for this page-->
+<script src="/static/js/demo/datatables-demo.js"></script>
+{{end}}

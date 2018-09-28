@@ -1,0 +1,49 @@
+
+.wrapper-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: #1C1C1C;
+
+}
+.card-a:hover {
+    color: #1C1C1C;
+}
+.card-a > * {
+    margin-top: 5px;
+}
+.flex-test {
+    width: 24.5em;
+    height: 15em;
+    border: 1px solid rgba(94, 94, 94, 0.38);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px 20px;
+    color: #fff;
+}
+.cardimg {
+}
+.Img {
+    width: 20em;
+    height: 10em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.title {
+    width: 20em;
+    height: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: rgba(116, 94, 112, 0.33);
+}
+.other {
+    width: 20em;
+    height: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: rgba(116, 94, 112, 0.33);
+}

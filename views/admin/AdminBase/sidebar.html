@@ -14,8 +14,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="pagesDropdown">
             {{range $num2 , $side2 := $.Render_sidebar}}
-                    {{if eq $side2.Parent_id $side.Id}}
+                    {{if eq $side2.Parent_id $side.Id }}
+                            {{ if eq $side2.Is_menu 1 }}
                 <a class="dropdown-item" href="{{$side2.Name}}">{{$side2.Display_name}}</a>
+                                    {{end}}
                             {{end}}
             {{end}}
                     {{/*<div class="dropdown-divider"></div>*/}}

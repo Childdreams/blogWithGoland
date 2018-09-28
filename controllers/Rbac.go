@@ -10,10 +10,11 @@ import (
 	"time"
 	"myproject/utils"
 	"strconv"
+	"myproject/controllers/middleware"
 )
 
 type RbacController struct {
-	BaseController
+	middleware.BaseController
 }
 
 //Permissions Controller

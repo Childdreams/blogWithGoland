@@ -17,18 +17,17 @@ func init() {
 
 	Admins :=beego.NewNamespace("/admin",
 		beego.NSRouter("/", &controllers.AdminController{},"get:Index"),
-		beego.NSRouter("/register", &controllers.AdminController{},"get,post:Register"),
-		beego.NSRouter("/login", &controllers.AdminController{},"get,post:Login"),
-		beego.NSRouter("/logout", &controllers.AdminController{},"get,post:Logout"),
+		beego.NSRouter("/register", &controllers.LoginController{},"get,post:Register"),
+		beego.NSRouter("/login", &controllers.LoginController{},"get,post:Login"),
+		beego.NSRouter("/logout", &controllers.LoginController{},"get,post:Logout"),
 		beego.NSRouter("/upload/Img", &controllers.AdminController{},"post:UploadImg"),
 		beego.NSRouter("/upload/Article", &controllers.ArticleController{},"post:UploadArticle"),
-
-		beego.NSInclude(
-			&controllers.AdminController{},
-		),
 	)
 	Article := beego.NewNamespace("/admin/article",
 		beego.NSRouter("/AddArticle", &controllers.ArticleController{},"get,post:AddArticle"),
+		beego.NSRouter("/ArticleList", &controllers.ArticleController{},"get,post:ArticleList"),
+		beego.NSRouter("/ModArticle", &controllers.ArticleController{},"get,post:ModArticle"),
+		beego.NSRouter("/DelArticle", &controllers.ArticleController{},"get:DelArticle"),
 
 	)
 	Rbac := beego.NewNamespace("/admin/rbac",
@@ -51,8 +50,8 @@ func init() {
 	BlogType := beego.NewNamespace("/admin/blogtype" ,
 		beego.NSRouter("/List",&controllers.BlogTypeController{}, "get:List"),
 		beego.NSRouter("/Add",&controllers.BlogTypeController{}, "get,post:Add"),
-		beego.NSRouter("/Mod/:id([0-9]+",&controllers.BlogTypeController{}, "get,post:Mod"),
-		beego.NSRouter("/Del/:id([0-9]+",&controllers.BlogTypeController{}, "get:Del"),
+		beego.NSRouter("/Mod/:id([0-9]+)",&controllers.BlogTypeController{}, "get,post:Mod"),
+		beego.NSRouter("/Del/:id([0-9]+)",&controllers.BlogTypeController{}, "get:Del"),
 	)
 	beego.AddNamespace(Admins)
 	beego.AddNamespace(Rbac)

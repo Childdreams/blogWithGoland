@@ -16,12 +16,11 @@
 
             <!-- Breadcrumbs-->
 
-
             <div class="test">
                 <div class="card">
                     <div class="card-header">Add User</div>
                     <div class="card-body">
-                        <form action="" method="post" >
+                        <form action="/admin/article/AddArticle" method="post" >
                         {{.xsrfdata}}
                         {{if .flash.error}}
                             <div class="form-group">
@@ -41,7 +40,7 @@
                                 <div class="form-row">
                                     <div class="col-md-3">
                                         <div class="form-label-group">
-                                            <input type="text" id="inputTitle" class="form-control" name="password" placeholder="Password" required="required">
+                                            <input type="text" id="inputTitle" class="form-control" name="title" placeholder="title" required="required" value="{{.articleList.Title}}">
                                             <label for="inputTitle">Title</label>
                                         </div>
                                     </div>
@@ -50,7 +49,9 @@
                                             <select name="type" id="" class="form-control" style="height: 50px">
                                                 {{ range $i ,$v := .select}}
                                                 <option value="{{$v.Id}}"
+                                                        {{if eq $v.Id $.articleList.Type}}
                                                         selected
+                                                        {{end}}
                                                 > {{$v.Blogname}}</option>
                                             {{end}}
                                             </select>
@@ -59,8 +60,13 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-label-group" >
-                                            <input type="file" id="inputView" class="form-control" name="view" placeholder="Password" required="required">
+                                            <input type="file" id="inputView" class="form-control" name="view" placeholder="view" required="required">
                                             <label for="inputView">view</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-label-group" >
+                                            <img src="{{.articleList.Views}}" onerror="javascript:this.src='/static/images/10086.jpg'" alt="" height="100px" style="border: 1px solid black; ">
                                         </div>
                                     </div>
 
@@ -69,7 +75,7 @@
                             <div class="form-group">
                                 <div class="form-label-group">
                                     <div id="edit">
-
+                                    {{str2html .articleList.Content}}
                                     </div>
                                 </div>
                             </div>
@@ -113,13 +119,13 @@
             autosaveInterval: 2500,
             height:"500px",
             width:"1625px",
-            saveURL: 'upload/Article',
+            saveURL: '../upload/Article',
             saveParams: { ArticleID: "{{.articleID}}" , _xsrf: {{.xsrf_token}} },
             saveInterval: 500,
             spellcheck: true,
             plainPaste: true,
             imageButtons: ["floatImageLeft", "floatImageNone", "floatImageRight", "linkImage", "replaceImage", "removeImage"],
-            imageUploadURL: 'upload/Img',
+            imageUploadURL: '../upload/Img',
             imageUploadParams: { _xsrf: {{.xsrf_token}} },
             imageParams: { postId: "123" },
             enableScript: false

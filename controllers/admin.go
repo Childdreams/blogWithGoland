@@ -3,19 +3,17 @@ package controllers
 import (
 	_ "github.com/go-sql-driver/mysql"
 	_ "myproject/models"
-	"github.com/astaxie/beego/orm"
-	"myproject/models"
 	"time"
 	"fmt"
 	"github.com/astaxie/beego"
-	"crypto/md5"
-	"encoding/hex"
 	"myproject/utils"
 	"os"
+	"strings"
+	"myproject/controllers/middleware"
 )
 
 type AdminController struct {
-	BaseController
+	middleware.BaseController
 }
 
 func (c *AdminController) URLMapping() {
@@ -29,8 +27,7 @@ func (c *AdminController) URLMapping() {
 
 
 func (c *AdminController) Index()  {
-	v := c.GetSession("email")
-	fmt.Println("sesssion Email : " ,v )
+	v := c.GetSession("UserInfo")
 	if  v == nil {
 		flash := beego.NewFlash()
 		flash.Error("Please login")
@@ -42,87 +39,6 @@ func (c *AdminController) Index()  {
 }
 
 
-func (c *AdminController) Login()  {
-
-	if c.Ctx.Request.Method == "GET" {
-		if v := c.GetSession("email") ;v != nil{
-			c.Redirect("/admin",302)
-			c.StopRun()
-		}
-		c.TplName = "admin/login.html"
-	}else {
-		Email := c.GetString("email")
-		Passwored := utils.EnMd5(c.GetString("password"))
-		o := orm.NewOrm()
-		qs := o.QueryTable("user")
-		var userRes []*models.Users
-		num,err := qs.Filter("email",Email).Filter("password",Passwored).All(&userRes)
-		flask := beego.NewFlash()
-		if err != nil || num < 1 {
-			flask.Error("Email is not exsit!")
-			flask.Store(&c.Controller)
-			c.Ctx.Redirect(302,"/admin/login")
-  			c.StopRun()
-		}
-		flask.Error("Email is not exsit!")
-		flask.Store(&c.Controller)
-		c.SetSession("email",Email)
-		c.Redirect("/admin/",302)
-	}
-
-}
-
-func (c *AdminController)Logout() {
-	flash := beego.NewFlash()
-	if Email := c.GetSession("email") ; Email != "" {
-		c.DelSession("email")
-		flash.Notice("Logout successful")
-		c.Redirect("/admin/login",302)
-	}
-	fmt.Println("this is add flash")
-	flash.Error("Not logged in")
-	flash.Store(&c.Controller)
-	c.Redirect("/admin/login",302)
-}
-
-
-func (c *AdminController) Register()  {
-	if c.Ctx.Request.Method == "GET" {
-		c.TplName = "admin/register.html"
-	}else {
-		FirstName := c.GetString("firstName")
-		LastName := c.GetString("lastName")
-		Email := c.GetString("email")
-		Password := c.GetString("password")
-		ConfirmPassword := c.GetString("confirmPassword")
-		flash:=beego.NewFlash()
-
-		if Password != ConfirmPassword {
-			flash.Error("The passwords do not match")
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(303,"register")
-			c.StopRun()
-		}
-		o := orm.NewOrm()
-		user := new(models.Users)
-		user.Name = FirstName + LastName
-		h := md5.New()
-		h.Write([]byte(Password))
-		cipherStr := h.Sum(nil)
-		user.Password = hex.EncodeToString(cipherStr)
-		user.Email = Email
-		fmt.Println("User execute Insert ")
-		_ ,err := o.Insert(user)
-		c.SetSession("email",Email)
-		if err != nil {
-			flash.Error("Mail to repeat")
-			flash.Store(&c.Controller)
-			c.Ctx.Redirect(303,"register")
-			c.StopRun()
-		}
-		c.Redirect("/admin",303)
-	}
-}
 
 // @router /forgot-password [get]
 func (c *AdminController) ForgotPassword()  {
@@ -154,8 +70,10 @@ func (c *AdminController) UploadImg() {
 	if os.IsNotExist(err) {
 		os.Mkdir(pathName,os.ModePerm)
 	}
-	path := fmt.Sprintf("%s/%s",pathName , h.Filename)
-	file.Close()
+	fileType := strings.Split(h.Filename,".")
+	fileName := fmt.Sprintf("%s.%s",utils.EnMd5(h.Filename + dirName),fileType[len(fileType) - 1])
+	path := fmt.Sprintf("%s/%s",pathName , fileName)
+	defer file.Close()
 	c.SaveToFile("file",path)
 	imginfo := ImgInfo{fmt.Sprintf("%s/%s",c.Ctx.Request.Header["Origin"][0],path)}
 	c.Data["json"] = &imginfo

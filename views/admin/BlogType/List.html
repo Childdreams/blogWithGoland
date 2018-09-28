@@ -63,8 +63,8 @@
                                 <td>{{$role.Serialnum}}</td>
                                 <td>{{date $role.Updated_at "Y-m-d H:i:s"}}</td>
                                 <td>
-                                    <a href="/admin/blogtype/Del/{{$role.Id}}" class="btn btn-danger ">DELETE</a>
-                                    &nbsp;<a href="/admin/blogtype/Mod/{{$role.Id}}" class="btn btn-primary ">MODIFY</a>
+                                    <a href="/admin/blogtype/Del?id={{$role.Id}}" class="btn btn-danger ">DELETE</a>
+                                    &nbsp;<a href="/admin/blogtype/Mod?id={{$role.Id}}" class="btn btn-primary ">MODIFY</a>
                                 </td>
                             </tr>
                             {{end}}

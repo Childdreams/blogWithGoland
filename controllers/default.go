@@ -38,8 +38,6 @@ func (c *MainController) Info()  {
 }
 
 
-
-
 func (c *MainController) Index() {
 	c.Data["Website"] = "test"
 	c.Data["Email"] = "TEST"

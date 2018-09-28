@@ -60,7 +60,7 @@
                                     {{range $index,$side := .tree }}
                                         {{if eq $side.Count 0}}
                                             <label>
-                                                <input type="checkbox" class="checkboxMain" value="00000">&nbsp;&nbsp;<b>{{$side.Display_name}}</b> <br>
+                                                <input type="checkbox" class="checkboxMain"  name="permissionID" value="{{$side.Id}}">      &nbsp;<b>{{$side.Display_name}}</b> <br>
                                                 {{range $index2,$side2 := $.tree}}
                                                     {{if eq $side2.Parent_id $side.Id}}
                                                         <input type="checkbox" name="permissionID" class="checkboxFork" {{if (In_array $.preRoles $side2.Id )}}checked{{end}} value="{{$side2.Id}}">&nbsp;&nbsp;{{$side2.Display_name}}

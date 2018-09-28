@@ -9,13 +9,14 @@ import (
 	"github.com/astaxie/beego/orm"
 	"fmt"
 	"time"
+	"myproject/controllers/middleware"
 )
 
 type BlogTypeController struct {
-	BaseController
+	middleware.BaseController
 }
 
-func (c *BaseController)List()  {
+func (c *BlogTypeController)List()  {
 	var blogtype []*models.Blogtype
 	orm.NewOrm().QueryTable("Blogtype").All(&blogtype)
 	fmt.Println(blogtype)
@@ -26,7 +27,7 @@ func (c *BaseController)List()  {
 
 }
 
-func (c *BaseController)Add()  {
+func (c *BlogTypeController)Add()  {
 	if c.Ctx.Request.Method == "GET"{
 		c.TplName = "admin/BlogType/Add.html"
 	}else {
@@ -48,16 +49,16 @@ func (c *BaseController)Add()  {
 	}
 }
 
-func (c *BaseController)Mod()  {
+func (c *BlogTypeController)Mod()  {
 	if c.Ctx.Request.Method == "GET" {
-		Id := c.Ctx.Input.Param(":id")
+		Id := c.GetString("id")
 		var blog models.Blogtype
 		orm.NewOrm().QueryTable("blogtype").Filter("id",Id).One(&blog)
 		c.Data["data"] = blog
 		c.TplName = "admin/BlogType/Mod.html"
 	}else {
 		flash := beego.NewFlash()
-		Id := c.Ctx.Input.Param(":id")
+		Id := c.GetString("id")
 		Name := c.GetString("name")
 		Serialnum := c.GetString("serialnum")
 		num ,_ := orm.NewOrm().QueryTable("blogtype").Filter("id",Id).Update(orm.Params{"blogname":Name,"serialnum":Serialnum})
@@ -70,7 +71,7 @@ func (c *BaseController)Mod()  {
 	}
 }
 
-func (c *BaseController)Del()  {
+func (c *BlogTypeController)Del()  {
 	flash := beego.NewFlash()
 	Id := c.Ctx.Input.Param(":id")
 	num ,_ := orm.NewOrm().QueryTable("blogtype").Filter("id",Id).Delete()

@@ -353,14 +353,14 @@ func (c *RbacController)AddUser()  {
 		userinfo.CreatedAt = time.Now()
 		userinfo.UpdatedAt = time.Now()
 		fmt.Println(Password,ConfirmPassword)
-		if Password == ConfirmPassword{
-			flash.Error("Password inconsistency")
+		if Password != ConfirmPassword{
+			flash.Error("Password inconsistency!!")
 			flash.Store(&c.Controller)
 			c.Redirect("AddUser",302)
 		}
 		userinfo.Password = utils.EnMd5(Password)
-		id , _ := orm.NewOrm().Insert(&userinfo)
-		fmt.Println(userinfo)
+		id , err := orm.NewOrm().Insert(&userinfo)
+		fmt.Println(userinfo , "-----this is userinfo -------" , err)
 		if id < 1 {
 			flash.Error("Created Fail")
 			flash.Store(&c.Controller)

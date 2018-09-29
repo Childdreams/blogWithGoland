@@ -17,6 +17,7 @@ func main() {
 		beego.BConfig.EnableErrorsShow = true
 		beego.BConfig.Log.AccessLogs = true
 	}
+	beego.SetStaticPath("/static","static")
 	beego.AddFuncMap("hi",utils.ForAdd)
 	beego.AddFuncMap("In_array",utils.In_array)
 

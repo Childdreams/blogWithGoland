@@ -56,25 +56,24 @@ func (c *ArticleController) AddArticle()  {
 			if os.IsNotExist(err) {
 				os.Mkdir(pathName,os.ModePerm)
 			}
-			fmt.Println(h.Filename)
 			fileType := strings.Split(h.Filename,".")
-			fmt.Println(fileType)
-			fileName := fmt.Sprintf("%s.%s",utils.EnMd5(h.Filename + dirName),fileType[len(fileType) - 1])
-			path := fmt.Sprintf("%s/%s",pathName , fileName)
+			fileName := fmt.Sprintf("%s.%s",utils.EnMd5(h.Filename + dirName + time.UTC.String()),fileType[len(fileType) - 1])
+			path = fmt.Sprintf("%s/%s",pathName , fileName)
 			defer file.Close()
-			c.SaveToFile("file",path)
+			err = c.SaveToFile("view",path)
 		}
 		var updataInfo orm.Params
 		updataInfo = make(orm.Params)
 		updataInfo["title"] = Title
 		updataInfo["type"] = Type
+
 		if path != "" {
-			updataInfo["views"] = path
+			updataInfo["views"] = "/"+path
 		}
 		orm.NewOrm().QueryTable("blog").Filter("id",Id).Update(
 			updataInfo,
 		)
-		c.Redirect("AddArticle", 302)
+		c.Redirect("ArticleList", 302)
 	}
 }
 
@@ -122,7 +121,7 @@ func (c *ArticleController)ModArticle (){
 	var blogT []*models.Blogtype
 	o := orm.NewOrm()
 	o.QueryTable("blogtype").OrderBy("-serialnum").All(&blogT)
-	var ArticleList utils.BlogContent
+	var ArticleList []utils.BlogContent
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("t1.*","t2.content").
 		From("blog as t1").
@@ -130,11 +129,11 @@ func (c *ArticleController)ModArticle (){
 		On("t1.blog_content_id = t2.id").
 		Where("t1.id = ?")
 	sql := qb.String()
-	orm.NewOrm().Raw(sql,id).QueryRow(&ArticleList)
-	fmt.Println(ArticleList)
+	orm.NewOrm().Raw(sql , id).QueryRows(&ArticleList)
+
 	c.Data["select"] =  blogT
 	c.Data["articleID"] = id
-	c.Data["articleList"] = ArticleList
+	c.Data["articleList"] = ArticleList[0]
 	c.TplName = "admin/addArticle.html"
 }
 

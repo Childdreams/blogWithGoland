@@ -6,7 +6,6 @@ import (
 	_ "myproject/models"
 	"html/template"
 	"myproject/utils"
-	"fmt"
 )
 
 type BaseController struct {
@@ -20,7 +19,6 @@ func (c *BaseController)Prepare()  {
 		vv := permissionTree.(utils.SessionUserInfo)
 		flag := false
 		for _, routers := range vv.Router {
-			fmt.Println(routers.Name)
 			if c.Data["RouterPattern"] == routers.Name {
 				flag = true
 				break

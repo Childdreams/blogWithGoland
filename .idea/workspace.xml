@@ -129,13 +129,13 @@
       <find>/{{</find>
       <find>:id</find>
       <find>id</find>
-      <find>this is test</find>
+      <find />
       <find>articleList</find>
       <find>ArticleList</find>
       <find>static</find>
       <find>SaveToFile</find>
-      <find>http: no such file</find>
-      <find>h</find>
+      <find />
+      <find />
       <find>fmt</find>
       <find>AddUser</find>
     </findStrings>
@@ -276,7 +276,7 @@
     </option>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25799572" />

@@ -359,8 +359,7 @@ func (c *RbacController)AddUser()  {
 			c.Redirect("AddUser",302)
 		}
 		userinfo.Password = utils.EnMd5(Password)
-		id , err := orm.NewOrm().Insert(&userinfo)
-		fmt.Println(userinfo , "-----this is userinfo -------" , err)
+		id , _ := orm.NewOrm().Insert(&userinfo)
 		if id < 1 {
 			flash.Error("Created Fail")
 			flash.Store(&c.Controller)
